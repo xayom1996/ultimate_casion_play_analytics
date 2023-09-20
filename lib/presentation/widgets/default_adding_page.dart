@@ -4,12 +4,14 @@ import 'package:ultimate_casino_play_analytics/app/theme/theme.dart';
 class DefaultAddingPage extends StatelessWidget {
   final String title;
   final Function() onConfirm;
-  final Column widgets;
+  final Widget widgets;
+  final bool? isCentered;
 
   const DefaultAddingPage(
       {Key? key,
       required this.widgets,
       required this.title,
+      this.isCentered = false,
       required this.onConfirm})
       : super(key: key);
 
@@ -27,57 +29,59 @@ class DefaultAddingPage extends StatelessWidget {
           ),
           color: AppColors.white,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 23),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Close',
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.font16.copyWith(
-                            color: AppColors.mainBlue,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 23),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                       child: Text(
-                        title,
+                        'Close',
                         textAlign: TextAlign.center,
                         style: AppTextStyles.font16.copyWith(
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w600,
+                          color: AppColors.mainBlue,
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: onConfirm,
-                        child: Text(
-                          'Confirm',
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.font16.copyWith(
-                            color: AppColors.mainBlue,
-                          ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.font16.copyWith(
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: onConfirm,
+                      child: Text(
+                        'Confirm',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.font16.copyWith(
+                          color: AppColors.mainBlue,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const Divider(),
-              widgets,
-            ],
-          ),
+            ),
+            const Divider(),
+            if (isCentered == true)
+              const Spacer(flex: 1),
+            widgets,
+            if (isCentered == true)
+              const Spacer(flex: 1),
+          ],
         ),
       ),
     ));

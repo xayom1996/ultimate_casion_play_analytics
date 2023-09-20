@@ -1,19 +1,22 @@
+import 'dart:typed_data';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ultimate_casino_play_analytics/app/theme/theme.dart';
+import 'package:ultimate_casino_play_analytics/app/utils.dart';
 
-class StatisticsGameContainer extends StatelessWidget {
+class GameContainer extends StatelessWidget {
   final String title;
-  final String description;
-  final String profit;
-  final List<int> image;
+  final double profit;
+  final int time;
+  final List<int> imageBytes;
 
-  const StatisticsGameContainer(
+  const GameContainer(
       {Key? key,
       required this.title,
-      required this.description,
-      required this.image,
-      required this.profit})
+      required this.profit,
+      required this.imageBytes,
+      required this.time})
       : super(key: key);
 
   @override
@@ -37,7 +40,7 @@ class StatisticsGameContainer extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(57.0),
               child: Image.memory(
-                Uint8List.fromList(image),
+                Uint8List.fromList(imageBytes),
                 fit: BoxFit.cover,
                 gaplessPlayback: true,
               ),
@@ -61,23 +64,36 @@ class StatisticsGameContainer extends StatelessWidget {
               const SizedBox(
                 height: 6,
               ),
-              Text(
-                description,
-                style: AppTextStyles.font12.copyWith(
-                  color: const Color(0xffB1B1B1),
-                  fontWeight: FontWeight.w500,
-                ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.access_time,
+                    color: AppColors.gray,
+                    size: 14,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    printDuration(Duration(seconds: time)),
+                    style: AppTextStyles.font12.copyWith(
+                      color: AppColors.gray,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
           const Spacer(),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               const SizedBox(
                 height: 8,
               ),
               Text(
-                profit,
+                '${profit > 0 ? '+' : '-'}\$${profit.abs()}',
                 style: AppTextStyles.font16.copyWith(
                   color: AppColors.dollarColor,
                   fontWeight: FontWeight.w500,

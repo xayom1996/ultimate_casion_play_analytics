@@ -13,6 +13,9 @@ class AppIcons {
   static const AppSvgAsset sessions = AppSvgAsset('assets/icons/sessions.svg');
   static const AppSvgAsset settings = AppSvgAsset('assets/icons/settings.svg');
   static const AppSvgAsset star = AppSvgAsset('assets/icons/star.svg');
+  static const AppSvgAsset pause = AppSvgAsset('assets/icons/pause.svg');
+  static const AppSvgAsset play = AppSvgAsset('assets/icons/play.svg');
+  static const AppSvgAsset check = AppSvgAsset('assets/icons/check.svg');
 }
 
 class AppSvgAsset{

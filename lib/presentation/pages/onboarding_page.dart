@@ -15,8 +15,15 @@ class OnBoardingPage extends StatefulWidget {
 
 class _OnBoardingPageState extends State<OnBoardingPage> {
   int currentIndex = 0;
+  bool hasCurrency = false;
   final PageController pageController = PageController();
   final TextEditingController nameController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    hasCurrency = context.read<SettingsCubit>().state.currency != '';
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,37 +33,53 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         color: AppColors.white,
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: PageView(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  controller: pageController,
-                  onPageChanged: (value) {
-                    setState(() {
-                      currentIndex = value;
-                    });
-                  },
-                  children: [
-                    DisclaimerPage(
-                      onTap: () {
-                        pageController.nextPage(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
+              BlocBuilder<SettingsCubit, SettingsState>(
+                builder: (context, state) {
+                  return state.status != SettingsStatus.initial
+                      ? Expanded(
+                          child: PageView(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            controller: pageController,
+                            onPageChanged: (value) {
+                              setState(() {
+                                currentIndex = value;
+                              });
+                            },
+                            children: [
+                              DisclaimerPage(
+                                onTap: () {
+                                  if (state.currency == '' || state.status != SettingsStatus.initDb) {
+                                    pageController.nextPage(
+                                      duration: const Duration(milliseconds: 500),
+                                      curve: Curves.easeInOut,
+                                    );
+                                  } else {
+                                    Navigator.pop(context);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const RootPage()));
+                                  }
+                                },
+                              ),
+                              if (state.currency == '' || state.status != SettingsStatus.initDb)
+                                CheckCurrencyPage(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const RootPage()));
+                                  },
+                                ),
+                            ],
+                          ),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    ),
-                    CheckCurrencyPage(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RootPage()));
-                      },
-                    ),
-                  ],
-                ),
+                }
               ),
             ],
-          ),
+          )
         ),
       ),
     );

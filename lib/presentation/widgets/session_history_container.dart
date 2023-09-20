@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ultimate_casino_play_analytics/app/theme/theme.dart';
+import 'package:ultimate_casino_play_analytics/app/utils.dart';
+import 'package:ultimate_casino_play_analytics/domain/entities/session.dart';
 
 class SessionHistoryContainer extends StatelessWidget {
-  final String title;
-  final String profit;
-  final String time;
-  final String date;
+  final Session session;
 
   const SessionHistoryContainer(
-      {Key? key,
-      required this.title,
-      required this.profit,
-      required this.time,
-      required this.date,})
+      {Key? key, required this.session,})
       : super(key: key);
 
   @override
@@ -45,81 +40,74 @@ class SessionHistoryContainer extends StatelessWidget {
           const SizedBox(
             width: 8,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.font16.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    '($date)',
-                    style: AppTextStyles.font12.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.gray,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.access_time,
-                    color: AppColors.gray,
-                    size: 14,
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    time,
-                    style: AppTextStyles.font12.copyWith(
-                      color: AppColors.gray,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const Spacer(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                profit,
-                style: AppTextStyles.font16.copyWith(
-                  color: AppColors.dollarColor,
-                  fontWeight: FontWeight.w500,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 8,
                 ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              Text(
-                '\$100 -> \$200',
-                style: AppTextStyles.font12.copyWith(
-                  color: AppColors.gray,
-                  fontWeight: FontWeight.w500,
+                Row(
+                  children: [
+                    Text(
+                      session.casinoName,
+                      style: AppTextStyles.font16.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    Text(
+                      '(${session.date})',
+                      style: AppTextStyles.font12.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.gray,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      profitToString(session.profit()),
+                      style: AppTextStyles.font16.copyWith(
+                        color: AppColors.dollarColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 6,
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.access_time,
+                      color: AppColors.gray,
+                      size: 14,
+                    ),
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    Text(
+                      printDuration(
+                          Duration(seconds: session.spendTimeInSeconds)),
+                      style: AppTextStyles.font12.copyWith(
+                        color: AppColors.gray,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '\$${session.balance} -> \$${session.balance + session.profit()}',
+                      style: AppTextStyles.font12.copyWith(
+                        color: AppColors.gray,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
