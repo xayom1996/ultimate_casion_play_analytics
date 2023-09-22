@@ -5,6 +5,7 @@ import 'package:ultimate_casino_play_analytics/app/theme/theme.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/settings/settings_cubit.dart';
 import 'package:ultimate_casino_play_analytics/presentation/pages/root_page.dart';
 import 'package:ultimate_casino_play_analytics/presentation/widgets/custom_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({Key? key}) : super(key: key);
@@ -115,10 +116,7 @@ class DisclaimerPage extends StatelessWidget {
             height: 20,
           ),
           Text(
-            '''
-            You can not play any real money games here!
-            We only provide a tool for recording your statistics in the casino. We encourage you to play responsibly and only where it is legal to do so.
-            ''',
+            '''You can not play any real money games here! We only provide a tool for recording your statistics in the casino. We encourage you to play responsibly and only where it is legal to do so.''',
             style: AppTextStyles.font14.copyWith(
               color: AppColors.miniBlack.withOpacity(0.55),
             ),
@@ -135,15 +133,25 @@ class DisclaimerPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                'Privacy Policy',
-                style: AppTextStyles.font12
-                    .copyWith(color: AppColors.miniBlack.withOpacity(0.4)),
+              GestureDetector(
+                onTap: () async {
+                  await launchUrl(Uri.parse('https://www.google.com'));
+                },
+                child: Text(
+                  'Privacy Policy',
+                  style: AppTextStyles.font12
+                      .copyWith(color: AppColors.miniBlack.withOpacity(0.4)),
+                ),
               ),
-              Text(
-                'Terms & Conditions',
-                style: AppTextStyles.font12
-                    .copyWith(color: AppColors.miniBlack.withOpacity(0.4)),
+              GestureDetector(
+                onTap: () async {
+                  await launchUrl(Uri.parse('https://www.google.com'));
+                },
+                child: Text(
+                  'Terms & Conditions',
+                  style: AppTextStyles.font12
+                      .copyWith(color: AppColors.miniBlack.withOpacity(0.4)),
+                ),
               ),
             ],
           ),
@@ -184,7 +192,7 @@ class CheckCurrencyPage extends StatelessWidget {
                         context.read<SettingsCubit>().changeCurrency(currency);
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(9),
+                        padding: EdgeInsets.only(right: currency != '£ GBP' ? 9 : 0),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: 18, horizontal: 23),
@@ -218,7 +226,7 @@ class CheckCurrencyPage extends StatelessWidget {
                         context.read<SettingsCubit>().changeCurrency(currency);
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(9),
+                        padding: const EdgeInsets.only(right: 9, top: 9),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: 18, horizontal: 23),
@@ -253,15 +261,25 @@ class CheckCurrencyPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  'Privacy Policy',
-                  style: AppTextStyles.font12
-                      .copyWith(color: AppColors.miniBlack.withOpacity(0.4)),
+                GestureDetector(
+                  onTap: () async {
+                    await launchUrl(Uri.parse('https://www.google.com'));
+                  },
+                  child: Text(
+                    'Privacy Policy',
+                    style: AppTextStyles.font12
+                        .copyWith(color: AppColors.miniBlack.withOpacity(0.4)),
+                  ),
                 ),
-                Text(
-                  'Terms & Conditions',
-                  style: AppTextStyles.font12
-                      .copyWith(color: AppColors.miniBlack.withOpacity(0.4)),
+                GestureDetector(
+                  onTap: () async {
+                    await launchUrl(Uri.parse('https://www.google.com'));
+                  },
+                  child: Text(
+                    'Terms & Conditions',
+                    style: AppTextStyles.font12
+                        .copyWith(color: AppColors.miniBlack.withOpacity(0.4)),
+                  ),
                 ),
               ],
             ),

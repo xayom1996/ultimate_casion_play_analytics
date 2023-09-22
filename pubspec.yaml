@@ -47,6 +47,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   image_picker: ^1.0.4
   jiffy: ^6.2.1
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_test:

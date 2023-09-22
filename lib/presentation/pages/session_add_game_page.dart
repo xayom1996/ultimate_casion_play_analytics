@@ -8,6 +8,7 @@ import 'package:ultimate_casino_play_analytics/app/utils.dart';
 import 'package:ultimate_casino_play_analytics/domain/entities/game.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/session/session_cubit.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/sessions/sessions_cubit.dart';
+import 'package:ultimate_casino_play_analytics/presentation/bloc/settings/settings_cubit.dart';
 import 'package:ultimate_casino_play_analytics/presentation/widgets/custom_button.dart';
 import 'package:ultimate_casino_play_analytics/presentation/widgets/custom_text_field.dart';
 import 'package:ultimate_casino_play_analytics/presentation/widgets/default_adding_page.dart';
@@ -455,14 +456,18 @@ class _SessionAddGamePageState extends State<SessionAddGamePage> {
                       ),
                       Expanded(
                         flex: 3,
-                        child: CustomTextField(
-                          controller: amountController,
-                          hintText: '\$1000',
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true, signed: true),
-                          textInputFormatters: [
-                            DecimalTextInputFormatter(),
-                          ],
+                        child: BlocBuilder<SettingsCubit, SettingsState>(
+                          builder: (context, state) {
+                            return CustomTextField(
+                              controller: amountController,
+                              hintText: '${state.getCurrencyCode()}1000',
+                              keyboardType: const TextInputType.numberWithOptions(
+                                  decimal: true, signed: true),
+                              textInputFormatters: [
+                                DecimalTextInputFormatter(),
+                              ],
+                            );
+                          }
                         ),
                       ),
                     ],
@@ -486,14 +491,18 @@ class _SessionAddGamePageState extends State<SessionAddGamePage> {
                   const SizedBox(
                     height: 16,
                   ),
-                  CustomTextField(
-                    controller: amountBeginController,
-                    hintText: '\$1000',
-                    keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true, signed: true),
-                    textInputFormatters: [
-                      DecimalTextInputFormatter(),
-                    ],
+                  BlocBuilder<SettingsCubit, SettingsState>(
+                    builder: (context, state) {
+                      return CustomTextField(
+                        controller: amountBeginController,
+                        hintText: '${state.getCurrencyCode()}1000',
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true, signed: true),
+                        textInputFormatters: [
+                          DecimalTextInputFormatter(),
+                        ],
+                      );
+                    }
                   ),
                 ],
               ),
@@ -513,14 +522,18 @@ class _SessionAddGamePageState extends State<SessionAddGamePage> {
                   const SizedBox(
                     height: 16,
                   ),
-                  CustomTextField(
-                    controller: amountEndController,
-                    hintText: '\$1000',
-                    keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true, signed: true),
-                    textInputFormatters: [
-                      DecimalTextInputFormatter(),
-                    ],
+                  BlocBuilder<SettingsCubit, SettingsState>(
+                    builder: (context, state) {
+                      return CustomTextField(
+                        controller: amountEndController,
+                        hintText: '${state.getCurrencyCode()}1000',
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true, signed: true),
+                        textInputFormatters: [
+                          DecimalTextInputFormatter(),
+                        ],
+                      );
+                    }
                   ),
                 ],
               ),

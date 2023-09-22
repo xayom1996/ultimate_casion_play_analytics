@@ -130,7 +130,7 @@ class _SessionPageState extends State<SessionPage> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    profitToString(state.session!.balance + state.session!.profit()),
+                                    context.read<SettingsCubit>().profitToString(state.session!.balance + state.session!.profit()),
                                     style: AppTextStyles.font12.copyWith(
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.white,

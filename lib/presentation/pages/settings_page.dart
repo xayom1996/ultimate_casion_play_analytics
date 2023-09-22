@@ -33,41 +33,45 @@ class SettingsPage extends StatelessWidget {
                       const SizedBox(
                         height: 16,
                       ),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          for (var currency in currencies) ...[
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<SettingsCubit>()
-                                    .changeCurrency(currency);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(29)),
-                                  color: state.currency == currency
-                                      ? AppColors.miniBlack
-                                      : AppColors.white,
-                                ),
-                                child: FittedBox(
-                                  child: Center(
-                                    child: Text(currency,
-                                        style: AppTextStyles.font14.copyWith(
-                                          color: state.currency == currency
-                                              ? AppColors.white
-                                              : AppColors.miniBlack,
-                                        )),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            for (var currency in currencies) ...[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<SettingsCubit>()
+                                        .changeCurrency(currency);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(29)),
+                                      color: state.currency == currency
+                                          ? AppColors.miniBlack
+                                          : AppColors.white,
+                                    ),
+                                    child: FittedBox(
+                                      child: Center(
+                                        child: Text(currency,
+                                            style: AppTextStyles.font14.copyWith(
+                                              color: state.currency == currency
+                                                  ? AppColors.white
+                                                  : AppColors.miniBlack,
+                                            )),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ]
-                        ],
+                            ]
+                          ],
+                        ),
                       ),
                     ],
                   ),

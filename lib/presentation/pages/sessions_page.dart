@@ -22,221 +22,225 @@ class SessionsPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: BlocBuilder<SessionsCubit, SessionsState>(
-          builder: (context, sessionsState) {
-            return BlocBuilder<SessionCubit, SessionState>(
-              builder: (context, sessionState) {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (context, state) {
+            return BlocBuilder<SessionsCubit, SessionsState>(
+              builder: (context, sessionsState) {
+                return BlocBuilder<SessionCubit, SessionState>(
+                  builder: (context, sessionState) {
+                    return SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Your Balance',
-                                  style: AppTextStyles.font16.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.gray,
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Your Balance',
+                                      style: AppTextStyles.font16.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.gray,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const BalanceEditingPage()));
+                                      },
+                                      child: BlocBuilder<SettingsCubit, SettingsState>(
+                                          builder: (context, state) {
+                                        return BalanceWidget(
+                                          balance: state.balance,
+                                          afterSign: afterPriceSign(state.getActualPrice(state.balance)),
+                                          hasSign: hasPriceSign(state.getActualPrice(state.balance)),
+                                        );
+                                      }),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                InkWell(
+                                GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const BalanceEditingPage()));
+                                    if (sessionState.isActive == false) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              const SessionCreationPage()));
+                                    } else {
+                                      showDialogForEmptyFields(
+                                          context,
+                                          'Please end active session',
+                                          'You can not create new session when you have active session');
+                                    }
                                   },
-                                  child: BlocBuilder<SettingsCubit, SettingsState>(
-                                      builder: (context, state) {
-                                    return BalanceWidget(
-                                      balance: state.balance,
-                                      afterSign: state.afterSign,
-                                      hasSign: state.hasSign,
-                                    );
-                                  }),
+                                  child: const AppSvgAssetIcon(
+                                    asset: AppIcons.roundedPlus,
+                                  ),
                                 ),
                               ],
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                if (sessionState.isActive == false) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                          const SessionCreationPage()));
-                                } else {
-                                  showDialogForEmptyFields(
-                                      context,
-                                      'Please end active session',
-                                      'You can not create new session when you have active session');
-                                }
-                              },
-                              child: const AppSvgAssetIcon(
-                                asset: AppIcons.roundedPlus,
-                              ),
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        if (sessionState.isActive == false && sessionsState.sessions.isEmpty) ... [
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: MediaQuery.of(context).size.height / 3.5,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const AppSvgAssetIcon(
-                                    asset: AppIcons.sessions,
-                                    color: AppColors.mainBlack,
-                                    height: 36,
-                                    width: 36,
+                            if (sessionState.isActive == false && sessionsState.sessions.isEmpty) ... [
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: MediaQuery.of(context).size.height / 3.5,
                                   ),
-                                  const SizedBox(
-                                    height: 14,
-                                  ),
-                                  Text(
-                                    'No sessions created yet',
-                                    style: AppTextStyles.font20.copyWith(
-                                      color: AppColors.mainBlack,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ] else ... [
-                          if (sessionState.isActive == true)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 20.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                          const SessionPage()));
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(20),
-                                  decoration: const BoxDecoration(
-                                      color: AppColors.mainBlue,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(30),
-                                        topRight: Radius.circular(30),
-                                        bottomLeft: Radius.circular(30),
-                                        bottomRight: Radius.circular(0),
-                                      )),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(16),
-                                        decoration: const BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius:
-                                          BorderRadius.all(Radius.circular(64)),
-                                        ),
-                                        child: const AppSvgAssetIcon(
-                                          asset: AppIcons.dice,
-                                        ),
+                                      const AppSvgAssetIcon(
+                                        asset: AppIcons.sessions,
+                                        color: AppColors.mainBlack,
+                                        height: 36,
+                                        width: 36,
                                       ),
                                       const SizedBox(
-                                        height: 20,
+                                        height: 14,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Active session',
-                                                style:
-                                                AppTextStyles.font16.copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.white,
-                                                ),
-                                              ),
-                                              Text(
-                                                Jiffy.parse(sessionState.session!.date, pattern: 'dd.MM.yyyy').fromNow(),
-                                                style:
-                                                AppTextStyles.font12.copyWith(
-                                                  color: AppColors.white,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: const BoxDecoration(
-                                              color: AppColors.white,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(30)),
-                                            ),
-                                            child: const AppSvgAssetIcon(
-                                              asset: AppIcons.arrowRight,
-                                            ),
-                                          ),
-                                        ],
+                                      Text(
+                                        'No sessions created yet',
+                                        style: AppTextStyles.font20.copyWith(
+                                          color: AppColors.mainBlack,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                            ),
-                          Text(
-                            'Session history',
-                            style: AppTextStyles.font20,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            children: [
-                              for (var session in sessionsState.sessions)
+                            ] else ... [
+                              if (sessionState.isActive == true)
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
+                                  padding: const EdgeInsets.only(bottom: 20.0),
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  SessionDetailPage(session: session)));
+                                              const SessionPage()));
                                     },
-                                    child: SessionHistoryContainer(
-                                      session: session,
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.all(20),
+                                      decoration: const BoxDecoration(
+                                          color: AppColors.mainBlue,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(30),
+                                            topRight: Radius.circular(30),
+                                            bottomLeft: Radius.circular(30),
+                                            bottomRight: Radius.circular(0),
+                                          )),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(16),
+                                            decoration: const BoxDecoration(
+                                              color: AppColors.white,
+                                              borderRadius:
+                                              BorderRadius.all(Radius.circular(64)),
+                                            ),
+                                            child: const AppSvgAssetIcon(
+                                              asset: AppIcons.dice,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Active session',
+                                                    style:
+                                                    AppTextStyles.font16.copyWith(
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColors.white,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    Jiffy.parse(sessionState.session!.date, pattern: 'dd.MM.yyyy').fromNow(),
+                                                    style:
+                                                    AppTextStyles.font12.copyWith(
+                                                      color: AppColors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.all(8),
+                                                decoration: const BoxDecoration(
+                                                  color: AppColors.white,
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(30)),
+                                                ),
+                                                child: const AppSvgAssetIcon(
+                                                  asset: AppIcons.arrowRight,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
+                              Text(
+                                'Session history',
+                                style: AppTextStyles.font20,
+                              ),
                               const SizedBox(
-                                height: 100,
+                                height: 20,
+                              ),
+                              Column(
+                                children: [
+                                  for (var session in sessionsState.sessions)
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 12),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SessionDetailPage(session: session)));
+                                        },
+                                        child: SessionHistoryContainer(
+                                          session: session,
+                                        ),
+                                      ),
+                                    ),
+                                  const SizedBox(
+                                    height: 100,
+                                  ),
+                                ],
                               ),
                             ],
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
                 );
               }
             );

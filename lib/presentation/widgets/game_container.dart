@@ -2,8 +2,10 @@ import 'dart:typed_data';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ultimate_casino_play_analytics/app/theme/theme.dart';
 import 'package:ultimate_casino_play_analytics/app/utils.dart';
+import 'package:ultimate_casino_play_analytics/presentation/bloc/settings/settings_cubit.dart';
 
 class GameContainer extends StatelessWidget {
   final String title;
@@ -49,43 +51,46 @@ class GameContainer extends StatelessWidget {
           const SizedBox(
             width: 8,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                title,
-                style: AppTextStyles.font16.copyWith(
-                  fontWeight: FontWeight.w500,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 8,
                 ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.access_time,
-                    color: AppColors.gray,
-                    size: 14,
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.font16.copyWith(
+                    fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    printDuration(Duration(seconds: time)),
-                    style: AppTextStyles.font12.copyWith(
+                ),
+                const SizedBox(
+                  height: 6,
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.access_time,
                       color: AppColors.gray,
-                      fontWeight: FontWeight.w500,
+                      size: 14,
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    Text(
+                      printDuration(Duration(seconds: time)),
+                      style: AppTextStyles.font12.copyWith(
+                        color: AppColors.gray,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -93,7 +98,7 @@ class GameContainer extends StatelessWidget {
                 height: 8,
               ),
               Text(
-                '${profit > 0 ? '+' : '-'}\$${profit.abs()}',
+                context.read<SettingsCubit>().profitToString(profit.abs()),
                 style: AppTextStyles.font16.copyWith(
                   color: AppColors.dollarColor,
                   fontWeight: FontWeight.w500,

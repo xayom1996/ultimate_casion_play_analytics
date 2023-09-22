@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/navigation/navigation_cubit.dart';
+import 'package:ultimate_casino_play_analytics/presentation/bloc/settings/settings_cubit.dart';
 import 'package:ultimate_casino_play_analytics/presentation/pages/sessions_page.dart';
 import 'package:ultimate_casino_play_analytics/presentation/pages/settings_page.dart';
 import 'package:ultimate_casino_play_analytics/presentation/pages/statistics_page.dart';

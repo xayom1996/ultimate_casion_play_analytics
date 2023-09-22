@@ -10,6 +10,7 @@ import 'package:ultimate_casino_play_analytics/app/widgets/app_icons.dart';
 import 'package:ultimate_casino_play_analytics/domain/entities/session.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/session/session_cubit.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/sessions/sessions_cubit.dart';
+import 'package:ultimate_casino_play_analytics/presentation/bloc/settings/settings_cubit.dart';
 import 'package:ultimate_casino_play_analytics/presentation/pages/session_add_game_page.dart';
 import 'package:ultimate_casino_play_analytics/presentation/widgets/custom_button.dart';
 import 'package:ultimate_casino_play_analytics/presentation/widgets/game_container.dart';
@@ -53,7 +54,7 @@ class SessionDetailPage extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                profitToString(session.balance + session.profit()),
+                                context.read<SettingsCubit>().profitToString(session.balance + session.profit()),
                                 style: AppTextStyles.font12.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.white,

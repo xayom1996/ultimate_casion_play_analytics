@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:ultimate_casino_play_analytics/app/constants.dart';
+import 'package:ultimate_casino_play_analytics/app/utils.dart';
+import 'package:http/http.dart' as http;
 
 part 'settings_state.dart';
 
@@ -27,32 +31,31 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(state.copyWith(status: SettingsStatus.initDb));
   }
 
-  void changeCurrency(String currency, {SettingsStatus? status = SettingsStatus.changed}) {
+  void changeCurrency(String currency, {SettingsStatus? status = SettingsStatus.changed}) async {
+    double newDollarRatio = 1;
+    final response = await http.get(Uri.parse(exchangeApiUrl));
+    if (response.statusCode == 200) {
+      try {
+        String currencyCode = currency.split(' ').last;
+        var body = json.decode(response.body) as Map<String, dynamic>;
+        newDollarRatio = body['data'][currencyCode].toDouble();
+      } catch (_) {
+        newDollarRatio = 1;
+      }
+    }
+
     emit(state.copyWith(
       currency: currency,
       status: status,
+      dollarRatio: newDollarRatio,
     ));
 
     saveToDb();
   }
 
   void changeBalance(double balance, {SettingsStatus? status = SettingsStatus.changed}) async {
-    String afterSign;
-    bool hasSign;
-
-    String value = max(0, balance).toStringAsFixed(2);
-    if (value.contains('.') && value != '0.00') {
-      afterSign = value.split('.').last;
-      hasSign = true;
-    } else {
-      afterSign = '';
-      hasSign = false;
-    }
-
     emit(state.copyWith(
-      balance: balance,
-      afterSign: afterSign,
-      hasSign: hasSign,
+      balance: balance / state.dollarRatio,
       status: status,
     ));
 
@@ -65,5 +68,14 @@ class SettingsCubit extends Cubit<SettingsState> {
       'currency': state.currency,
       'balance': state.balance,
     });
+  }
+
+  String getPrice(double price) {
+    String currencySign = state.currency.split(' ').first;
+    return '$currencySign${formatPrice(state.getActualPrice(price))}';
+  }
+
+  String profitToString(double profit) {
+    return '${profit > 0 ? '+' : profit != 0 ? '-' : ''}${getPrice(profit.abs())}';
   }
 }

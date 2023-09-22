@@ -25,7 +25,7 @@ class _SessionCreationPageState extends State<SessionCreationPage> {
 
   @override
   void initState() {
-    double balance = context.read<SettingsCubit>().state.balance;
+    double balance = context.read<SettingsCubit>().state.balance * context.read<SettingsCubit>().state.dollarRatio;
     balanceController = TextEditingController(text: balance == 0 ? '': balance.toStringAsFixed(2));
     super.initState();
   }
@@ -112,29 +112,33 @@ class _SessionCreationPageState extends State<SessionCreationPage> {
                 const SizedBox(
                   height: 16,
                 ),
-                CustomTextField(
-                  controller: balanceController,
-                  hintText: '\$1000',
-                  keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true, signed: true),
-                  textInputFormatters: [
-                    DecimalTextInputFormatter(),
-                    // TextInputFormatter.withFunction(
-                    //       (oldValue, newValue) {
-                    //     if (newValue.text.length == 1) {
-                    //       if (newValue.text == '\$') {
-                    //         return const TextEditingValue(text: '');
-                    //       } else {
-                    //         return TextEditingValue(
-                    //             text: '\$${newValue.text}',
-                    //             selection: const TextSelection.collapsed(offset: 2));
-                    //       }
-                    //     } else {
-                    //       return newValue;
-                    //     }
-                    //   },
-                    // ),
-                  ],
+                BlocBuilder<SettingsCubit, SettingsState>(
+                  builder: (context, state) {
+                    return CustomTextField(
+                      controller: balanceController,
+                      hintText: '${state.getCurrencyCode()}1000',
+                      keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true, signed: true),
+                      textInputFormatters: [
+                        DecimalTextInputFormatter(),
+                        // TextInputFormatter.withFunction(
+                        //       (oldValue, newValue) {
+                        //     if (newValue.text.length == 1) {
+                        //       if (newValue.text == '\$') {
+                        //         return const TextEditingValue(text: '');
+                        //       } else {
+                        //         return TextEditingValue(
+                        //             text: '\$${newValue.text}',
+                        //             selection: const TextSelection.collapsed(offset: 2));
+                        //       }
+                        //     } else {
+                        //       return newValue;
+                        //     }
+                        //   },
+                        // ),
+                      ],
+                    );
+                  }
                 ),
               ],
             ),

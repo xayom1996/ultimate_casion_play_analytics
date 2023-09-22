@@ -10,7 +10,7 @@ class SessionsState extends Equatable {
     this.sessions = const [],
     this.sessionsFromPeriod = const [],
     this.games = const [],
-    this.period = 'All time',
+    this.period = '',
   });
 
   @override

@@ -46,31 +46,34 @@ class StatisticsGameContainer extends StatelessWidget {
           const SizedBox(
             width: 8,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                title,
-                style: AppTextStyles.font16.copyWith(
-                  fontWeight: FontWeight.w500,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 8,
                 ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              Text(
-                description,
-                style: AppTextStyles.font12.copyWith(
-                  color: const Color(0xffB1B1B1),
-                  fontWeight: FontWeight.w500,
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.font16.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 6,
+                ),
+                Text(
+                  description,
+                  style: AppTextStyles.font12.copyWith(
+                    color: const Color(0xffB1B1B1),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
           Column(
             children: [
               const SizedBox(

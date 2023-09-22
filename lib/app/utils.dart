@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +29,10 @@ class DateTextInputFormatter extends TextInputFormatter {
 }
 
 String formatPrice(num price) {
+  return NumberFormat.compact().format(price).replaceAll(',', ' ');
+}
+
+String simpleFormatPrice(num price) {
   return NumberFormat().format(price).replaceAll(',', ' ');
 }
 
@@ -64,10 +70,6 @@ void showDialogForEmptyFields(
       });
 }
 
-String profitToString(double profit, {String? currency = '\$'}) {
-  return '${profit > 0 ? '+' : profit != 0 ? '-' : ''}$currency${formatPrice(profit.abs())}';
-}
-
 int countGames(List<Session> sessions) {
   int sum = 0;
   for (var session in sessions) {
@@ -99,11 +101,25 @@ List statisticsGames(List<Session> sessions) {
         uniqueGame['name'] = game.name;
         uniqueGame['image'] = game.imageBytes;
         uniqueGame['profit'] = game.profit;
-        uniqueGame['count'] = 0;
+        uniqueGame['count'] = 1;
         uniqueGames[game.name] = uniqueGame;
       }
     }
   }
 
   return uniqueGames.values.toList();
+}
+
+bool hasPriceSign(double price) {
+  String value = max(0, price).toStringAsFixed(2);
+  return (value.contains('.') && value != '0.00');
+}
+
+String afterPriceSign(double price) {
+  String value = max(0, price).toStringAsFixed(2);
+  if (value.contains('.') && value != '0.00') {
+    return value.split('.').last;
+  } else {
+    return '';
+  }
 }

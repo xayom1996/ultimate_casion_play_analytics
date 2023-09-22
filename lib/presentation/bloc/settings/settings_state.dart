@@ -9,20 +9,26 @@ enum SettingsStatus {
 class SettingsState extends Equatable {
   final String currency;
   final double balance;
-  final String afterSign;
-  final bool hasSign;
   final SettingsStatus status;
+  final double dollarRatio;
 
   const SettingsState({
     this.currency = '',
     this.balance = 0,
-    this.afterSign = '',
-    this.hasSign = false,
+    this.dollarRatio = 1,
     this.status = SettingsStatus.initial,
   });
 
   @override
-  List<Object> get props => [currency, balance, afterSign, hasSign, status];
+  List<Object> get props => [currency, balance, status];
+
+  String getCurrencyCode() {
+    return currency.split(' ').first;
+  }
+
+  double getActualPrice(double price) {
+    return price * dollarRatio;
+  }
 
   SettingsState copyWith({
     String? currency,
@@ -30,13 +36,13 @@ class SettingsState extends Equatable {
     String? afterSign,
     bool? hasSign,
     SettingsStatus? status,
+    double? dollarRatio,
   }) {
     return SettingsState(
       currency: currency ?? this.currency,
       balance: balance ?? this.balance,
-      afterSign: afterSign ?? this.afterSign,
-      hasSign: hasSign ?? this.hasSign,
       status: status ?? this.status,
+      dollarRatio: dollarRatio ?? this.dollarRatio,
     );
   }
 }
