@@ -34,14 +34,23 @@ class StatisticsGameContainer extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(57)),
               color: const Color(0xffF4F4F4),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(57.0),
-              child: Image.memory(
-                Uint8List.fromList(image),
-                fit: BoxFit.cover,
-                gaplessPlayback: true,
-              ),
-            ),
+            child: image.isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(57.0),
+                    child: Image.memory(
+                      Uint8List.fromList(image),
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                    ),
+                  )
+                : Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Image.asset(
+                        'assets/images/onboarding_image.png',
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(
             width: 8,

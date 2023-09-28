@@ -36,6 +36,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         height: 44,
@@ -87,7 +88,13 @@ class _StatisticsPageState extends State<StatisticsPage> {
                           decoration: const BoxDecoration(
                               color: AppColors.white,
                               borderRadius: BorderRadius.all(Radius.circular(19))),
-                          child: LineChartSample2(),
+                          child: LineChartSample2(
+                            data: state.getPeriodData(),
+                            spots: state.spots,
+                            maxY: state.maxY,
+                            lastBalance: state.lastBalance,
+                            percentDifference: state.percentDifference,
+                          ),
                         ),
                       ),
                       const SizedBox(

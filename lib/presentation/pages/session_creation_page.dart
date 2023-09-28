@@ -41,10 +41,13 @@ class _SessionCreationPageState extends State<SessionCreationPage> {
           showDialogForEmptyFields(context, 'Please fill all fields',
               'You can not create session with empty fields');
         } else {
+          var balance = context.read<SettingsCubit>().state.priceToUsd(double.parse(balanceController.text));
+          print('balance');
+          print(balance);
           context.read<SessionCubit>().addSession(
                 dateController.text,
                 casinoController.text,
-                double.parse(balanceController.text),
+                balance,
               );
           Navigator.pop(context);
           Navigator.push(context,

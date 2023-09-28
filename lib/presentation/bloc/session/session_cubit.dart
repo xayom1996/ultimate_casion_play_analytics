@@ -46,6 +46,7 @@ class SessionCubit extends Cubit<SessionState> {
 
   void addGame(
       String gameName, List<int> imageBytes, String imageName, double profit) async {
+    print(profit);
     Game game = Game(
       name: gameName,
       imageBytes: imageBytes,

@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ultimate_casino_play_analytics/app/theme/theme.dart';
 import 'package:ultimate_casino_play_analytics/app/utils.dart';
 import 'package:ultimate_casino_play_analytics/domain/entities/game.dart';
+import 'package:ultimate_casino_play_analytics/domain/entities/session.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/session/session_cubit.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/sessions/sessions_cubit.dart';
 import 'package:ultimate_casino_play_analytics/presentation/bloc/settings/settings_cubit.dart';
@@ -31,6 +32,14 @@ class _SessionAddGamePageState extends State<SessionAddGamePage> {
   List<int>? _image;
   String? imageName;
   Game? setGame;
+  double currentAmount = 0;
+
+  @override
+  void initState() {
+    Session? session = context.read<SessionCubit>().state.session;
+    currentAmount = context.read<SettingsCubit>().state.getActualPrice(session!.balance + session.profit());
+    super.initState();
+  }
 
   Future getImage() async {
     ImagePicker picker = ImagePicker();
@@ -235,6 +244,7 @@ class _SessionAddGamePageState extends State<SessionAddGamePage> {
     return DefaultAddingPage(
       title: 'Game adding',
       onConfirm: () {
+        var settingsCubit = context.read<SettingsCubit>();
         double? profit;
         if (result == 'amount' && amountController.text.isNotEmpty) {
           profit =
@@ -246,16 +256,21 @@ class _SessionAddGamePageState extends State<SessionAddGamePage> {
           profit = double.parse(amountEndController.text) -
               double.parse(amountBeginController.text);
         }
-        if (gameNameController.text.isEmpty ||
-            _image == null ||
-            profit == null) {
+        if (gameNameController.text.isEmpty || profit == null) {
           showDialogForEmptyFields(context, 'Please fill all fields',
-              'You can not create game with empty fields and photo');
+              'You can not create game with empty fields');
         } else {
-          context
-              .read<SessionCubit>()
-              .addGame(gameNameController.text, _image!, imageName!, profit);
-          Navigator.pop(context);
+          var profitToUsd = settingsCubit.state.priceToUsd(profit);
+          var currentAmountToUsd = settingsCubit.state.priceToUsd(currentAmount);
+          if (currentAmountToUsd + profitToUsd < 0) {
+            showDialogForEmptyFields(context, 'Please change amounts',
+                'You lost ${settingsCubit.getPrice(profitToUsd.abs())}, but you have now only ${settingsCubit.getPrice(currentAmountToUsd.abs())}');
+          } else {
+            context
+                .read<SessionCubit>()
+                .addGame(gameNameController.text, _image ?? [], imageName ?? '', profitToUsd);
+            Navigator.pop(context);
+          }
         }
       },
       widgets: Column(

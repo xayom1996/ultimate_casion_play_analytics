@@ -65,4 +65,23 @@ class Session {
 
     return profit;
   }
+
+  List<int> getImageBytes() {
+    List<int> imageBytes = [];
+    Map<String, int> countGames = {};
+    int maxCount = 0;
+    for(var game in games ?? []) {
+      if (countGames[game.name] != null) {
+        countGames[game.name] = (countGames[game.name] as int) + 1;
+      } else {
+        countGames[game.name] = 1;
+      }
+      if ((countGames[game.name] as int) > maxCount) {
+        imageBytes = game.imageBytes;
+        maxCount = countGames[game.name] as int;
+      }
+    }
+
+    return imageBytes;
+  }
 }

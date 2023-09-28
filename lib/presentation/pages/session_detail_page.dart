@@ -105,7 +105,7 @@ class SessionDetailPage extends StatelessWidget {
                             child: GameContainer(
                               title: session.games![i].name,
                               profit: session.games![i].profit ?? 0,
-                              imageBytes: session.games![i].imageBytes,
+                              imageBytes: session.games![i].imageBytes ?? [],
                               time:
                               session.games![i].timeInSeconds ?? 0,
                             ),

@@ -50,22 +50,24 @@ class SessionsPage extends StatelessWidget {
                                     const SizedBox(
                                       height: 4,
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const BalanceEditingPage()));
-                                      },
-                                      child: BlocBuilder<SettingsCubit, SettingsState>(
-                                          builder: (context, state) {
-                                        return BalanceWidget(
-                                          balance: state.balance,
-                                          afterSign: afterPriceSign(state.getActualPrice(state.balance)),
-                                          hasSign: hasPriceSign(state.getActualPrice(state.balance)),
+                                    BlocBuilder<SettingsCubit, SettingsState>(
+                                      builder: (context, state) {
+                                        print(state.balance);
+                                        return InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const BalanceEditingPage()));
+                                          },
+                                          child: BalanceWidget(
+                                            balance: state.balance,
+                                            afterSign: afterPriceSign(state.getActualPrice(state.balance)),
+                                            hasSign: hasPriceSign(state.getActualPrice(state.balance)),
+                                          ),
                                         );
-                                      }),
+                                      }
                                     ),
                                   ],
                                 ),

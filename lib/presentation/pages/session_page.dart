@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class _SessionPageState extends State<SessionPage> {
           context.read<SessionsCubit>().addSession(session);
           context.read<SessionCubit>().endSession();
           context.read<SettingsCubit>().changeBalance(
-            session.balance + session.profit(),
+            max(0, session.balance + session.profit()),
           );
           timer!.cancel();
           timer = null;
@@ -181,7 +182,7 @@ class _SessionPageState extends State<SessionPage> {
                               child: GameContainer(
                                 title: state.session!.games![i].name,
                                 profit: state.session!.games![i].profit ?? 0,
-                                imageBytes: state.session!.games![i].imageBytes,
+                                imageBytes: state.session!.games![i].imageBytes ?? [],
                                 time:
                                     state.session!.games![i].timeInSeconds ?? 0,
                               ),

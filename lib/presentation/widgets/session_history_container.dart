@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ultimate_casino_play_analytics/app/theme/theme.dart';
@@ -30,14 +32,23 @@ class SessionHistoryContainer extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(57)),
               color: Color(0xffF4F4F4),
             ),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Image.asset(
-                  'assets/images/onboarding_image.png',
-                ),
-              ),
-            ),
+            child: session.getImageBytes().isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(57.0),
+                    child: Image.memory(
+                      Uint8List.fromList(session.getImageBytes()),
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                    ),
+                  )
+                : Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Image.asset(
+                        'assets/images/onboarding_image.png',
+                      ),
+                    ),
+                  )
           ),
           const SizedBox(
             width: 8,

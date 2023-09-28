@@ -27,7 +27,14 @@ class SettingsState extends Equatable {
   }
 
   double getActualPrice(double price) {
+    if (-1 < price * dollarRatio && price * dollarRatio < 1) {
+      return 0;
+    }
     return price * dollarRatio;
+  }
+
+  double priceToUsd(double price) {
+    return price / dollarRatio;
   }
 
   SettingsState copyWith({

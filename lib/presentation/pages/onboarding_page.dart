@@ -67,8 +67,10 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                               if (state.currency == '' || state.status != SettingsStatus.initDb)
                                 CheckCurrencyPage(
                                   onTap: () {
-                                    Navigator.pop(context);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const RootPage()));
+                                    if (state.currency != '') {
+                                      Navigator.pop(context);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RootPage()));
+                                    }
                                   },
                                 ),
                             ],
@@ -177,6 +179,7 @@ class CheckCurrencyPage extends StatelessWidget {
             const Spacer(),
             Text(
               'Please choose your currency',
+              textAlign: TextAlign.center,
               style: AppTextStyles.font24,
             ),
             const SizedBox(

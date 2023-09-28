@@ -23,7 +23,8 @@ class _BalanceEditingPageState extends State<BalanceEditingPage> {
 
   @override
   void didChangeDependencies() {
-    balance = context.read<SettingsCubit>().state.balance * context.read<SettingsCubit>().state.dollarRatio;
+    balance = context.read<SettingsCubit>().state.balance
+        * context.read<SettingsCubit>().state.dollarRatio;
     afterSign = afterPriceSign(balance);
     hasSign = hasPriceSign(balance);
     controller = TextEditingController(
@@ -42,7 +43,7 @@ class _BalanceEditingPageState extends State<BalanceEditingPage> {
         return DefaultAddingPage(
           title: 'Balance editing',
           onConfirm: () {
-            context.read<SettingsCubit>().changeBalance(balance);
+            context.read<SettingsCubit>().changeBalance(balance / state.dollarRatio);
             Navigator.pop(context);
           },
           isCentered: true,

@@ -33,14 +33,18 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   void changeCurrency(String currency, {SettingsStatus? status = SettingsStatus.changed}) async {
     double newDollarRatio = 1;
-    final response = await http.get(Uri.parse(exchangeApiUrl));
-    if (response.statusCode == 200) {
-      try {
-        String currencyCode = currency.split(' ').last;
-        var body = json.decode(response.body) as Map<String, dynamic>;
-        newDollarRatio = body['data'][currencyCode].toDouble();
-      } catch (_) {
-        newDollarRatio = 1;
+    if (currency != '\$ USD') {
+      final response = await http.get(Uri.parse(exchangeApiUrl));
+      if (response.statusCode == 200) {
+        try {
+          String currencyCode = currency
+              .split(' ')
+              .last;
+          var body = json.decode(response.body) as Map<String, dynamic>;
+          newDollarRatio = body['data'][currencyCode].toDouble();
+        } catch (_) {
+          newDollarRatio = 1;
+        }
       }
     }
 
@@ -55,7 +59,7 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   void changeBalance(double balance, {SettingsStatus? status = SettingsStatus.changed}) async {
     emit(state.copyWith(
-      balance: balance / state.dollarRatio,
+      balance: balance,
       status: status,
     ));
 

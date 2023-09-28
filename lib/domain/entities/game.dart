@@ -1,13 +1,13 @@
 class Game {
   final String name;
-  final List<int> imageBytes;
+  final List<int>? imageBytes;
   final String imageName;
   final double? profit;
   final int? timeInSeconds;
 
   const Game({
     required this.name,
-    required this.imageBytes,
+    this.imageBytes = const [],
     required this.imageName,
     this.profit,
     this.timeInSeconds,

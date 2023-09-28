@@ -1,9 +1,25 @@
+import 'dart:collection';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ultimate_casino_play_analytics/app/theme/theme.dart';
+import 'package:ultimate_casino_play_analytics/presentation/bloc/settings/settings_cubit.dart';
 
 class LineChartSample2 extends StatefulWidget {
-  const LineChartSample2({super.key});
+  final Map<String, dynamic> data;
+  final Map<int, double> spots;
+  final double maxY;
+  final double lastBalance;
+  final double percentDifference;
+
+  const LineChartSample2(
+      {super.key,
+      required this.data,
+      required this.spots,
+      required this.maxY,
+      required this.lastBalance,
+      required this.percentDifference});
 
   @override
   State<LineChartSample2> createState() => _LineChartSample2State();
@@ -17,22 +33,71 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   bool showAvg = false;
 
+  Map<int, double> sortedSpots() {
+    return SplayTreeMap<int, double>.from(
+        widget.spots, (a, b) => a.compareTo(b));
+  }
+
+  String getTouchedPrice(int idx) {
+    return context.read<SettingsCubit>().getPrice(sortedSpots()[sortedSpots().keys.toList()[idx]]!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         AspectRatio(
-          aspectRatio: 1.70,
+          aspectRatio: 1.20,
           child: Padding(
             padding: const EdgeInsets.only(
-              // right: 18,
-              // left: 12,
-              // top: 24,
-              // bottom: 12,
-            ),
+                // right: 18,
+                // left: 12,
+                // top: 24,
+                // bottom: 12,
+                ),
             child: LineChart(
               mainData(),
             ),
+          ),
+        ),
+        Positioned(
+          top: 14,
+          left: 12,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Balance',
+                style: AppTextStyles.font16,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                context.read<SettingsCubit>().getPrice(widget.lastBalance),
+                style: AppTextStyles.font24,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(54)),
+                  color: AppColors.mainBlue,
+                ),
+                child: Center(
+                  child: Text(
+                    '${widget.percentDifference > 0 ? '+': widget.percentDifference != 0 ? '-' : ''}${widget.percentDifference.abs().toStringAsFixed(2)}%',
+                    style: AppTextStyles.font12.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -43,52 +108,20 @@ class _LineChartSample2State extends State<LineChartSample2> {
     var style = AppTextStyles.font12.copyWith(
       fontWeight: FontWeight.w300,
     );
+    int lastIdx = widget.data['count'].toInt();
     Widget text;
-    switch (value.toInt()) {
-      case 1:
-        text = Text('FEB', style: style);
-        break;
-      case 2:
-        text = Text('MAR', style: style);
-        break;
-      case 5:
-        text = Text('JUN', style: style);
-        break;
-      case 8:
-        text = Text('SEP', style: style);
-        break;
-      default:
-        text = Text('', style: style);
-        break;
+    if (value == 1) {
+      text = Text(widget.data['lines'].first, style: style);
+    } else if (value == lastIdx) {
+      text = Text(widget.data['lines'].last, style: style);
+    } else {
+      return const SizedBox.shrink();
     }
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: text,
     );
-  }
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
   }
 
   LineChartData mainData() {
@@ -131,9 +164,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: false,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
           ),
         ),
       ),
@@ -142,26 +172,46 @@ class _LineChartSample2State extends State<LineChartSample2> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: widget.data['count'].toDouble() + 1,
       minY: 0,
-      maxY: 6,
+      maxY: 2 * context.read<SettingsCubit>().state.getActualPrice(widget.maxY),
+      lineTouchData: LineTouchData(
+          enabled: true,
+          touchTooltipData: LineTouchTooltipData(
+            tooltipBgColor: AppColors.white,
+            tooltipRoundedRadius: 20.0,
+            showOnTopOfTheChartBoxArea: true,
+            fitInsideHorizontally: false,
+            tooltipMargin: -10,
+            getTooltipItems: (touchedSpots) {
+              return touchedSpots.map(
+                    (LineBarSpot touchedSpot) {
+                  var textStyle = AppTextStyles.font14.copyWith(
+                    color: AppColors.mainBlue,
+                    fontWeight: FontWeight.w700,
+                  );
+                  return LineTooltipItem(
+                    getTouchedPrice(touchedSpot.spotIndex.toInt()),
+                    textStyle,
+                  );
+                },
+              ).toList();
+            },
+          ),
+
+      ),
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 1),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 1),
-            FlSpot(6.8, 1.1),
-            FlSpot(8, 1),
-            FlSpot(9.5, 1),
-            FlSpot(11, 1),
-          ],
+          spots: sortedSpots()
+              .keys
+              .map((key) => FlSpot(key.toDouble(), context.read<SettingsCubit>().state.getActualPrice(widget.spots[key]!)))
+              .toList(),
           isCurved: true,
           color: gradientColors[0],
           barWidth: 4,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
+            show: true,
           ),
           belowBarData: BarAreaData(
             show: true,
