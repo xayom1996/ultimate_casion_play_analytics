@@ -116,7 +116,9 @@ class SessionHistoryContainer extends StatelessWidget {
               Text(
                 context.read<SettingsCubit>().profitToString(session.profit()),
                 style: AppTextStyles.font16.copyWith(
-                  color: AppColors.dollarColor,
+                  color: context.read<SettingsCubit>().profitToString(session.profit()).contains('-')
+                      ? AppColors.red
+                      : AppColors.dollarColor,
                   fontWeight: FontWeight.w500,
                 ),
               ),

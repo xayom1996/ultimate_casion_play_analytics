@@ -17,6 +17,9 @@ class _BalanceEditingPageState extends State<BalanceEditingPage> {
   double balance = 0;
   String afterSign = '';
   bool hasSign = false;
+  int? maxLength;
+  String textValue = '';
+  final GlobalKey _containerKey = GlobalKey();
 
   final FocusNode focusNode = FocusNode();
   late TextEditingController controller;
@@ -28,12 +31,43 @@ class _BalanceEditingPageState extends State<BalanceEditingPage> {
     afterSign = afterPriceSign(balance);
     hasSign = hasPriceSign(balance);
     controller = TextEditingController(
-        text: balance == 0 ? '0' : balance.toStringAsFixed(2));
+        text: balance == 0 ? '0' : balance.toStringAsFixed(2).replaceAll('.00', ''));
     controller.selection =
         TextSelection.collapsed(offset: controller.text.length);
 
     FocusScope.of(context).requestFocus(focusNode);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_containerKey.currentContext != null && MediaQuery.of(context).size.width
+          - _containerKey.currentContext!.size!.width <= 30) {
+        setState(() {
+          maxLength = controller.text
+              .split('.')
+              .first
+              .length;
+        });
+      }
+    });
     super.didChangeDependencies();
+  }
+
+  void changeBalance(String value) {
+    setState(() {
+      textValue = value;
+      if (value == '') {
+        balance = 0;
+      } else {
+        balance = double.parse(value);
+      }
+      if (value.contains('.')) {
+        afterSign = value
+            .split('.')
+            .last;
+        hasSign = true;
+      } else {
+        afterSign = '';
+        hasSign = false;
+      }
+    });
   }
 
   @override
@@ -69,24 +103,15 @@ class _BalanceEditingPageState extends State<BalanceEditingPage> {
                     controller: controller,
                     keyboardType: const TextInputType.numberWithOptions(
                         signed: true, decimal: true),
+                    maxLength: maxLength,
+                    decoration: const InputDecoration(
+                      counterText: '',
+                    ),
                     inputFormatters: [
                       DecimalTextInputFormatter(),
                     ],
                     onChanged: (value) {
-                      setState(() {
-                        if (value == '') {
-                          balance = 0;
-                        } else {
-                          balance = double.parse(value);
-                        }
-                        if (value.contains('.')) {
-                          afterSign = value.split('.').last;
-                          hasSign = true;
-                        } else {
-                          afterSign = '';
-                          hasSign = false;
-                        }
-                      });
+                      changeBalance(value);
                     },
                   ),
                 ),
@@ -94,11 +119,32 @@ class _BalanceEditingPageState extends State<BalanceEditingPage> {
                   onTap: () {
                     FocusScope.of(context).requestFocus(focusNode);
                   },
-                  child: BalanceWidget(
-                    balance: balance,
-                    afterSign: afterSign,
-                    hasSign: hasSign,
-                    isEditingPage: true,
+                  child: NotificationListener<SizeChangedLayoutNotification>(
+                    onNotification: (SizeChangedLayoutNotification notification) {
+                      if (MediaQuery.of(context).size.width
+                          - _containerKey.currentContext!.size!.width <= 30) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          setState(() {
+                            maxLength = textValue.split('.').first.length;
+                          });
+                        });
+                      }
+                      return true;
+                    },
+                    child: SizeChangedLayoutNotifier(
+                      child: Container(
+                        key: _containerKey,
+                        // constraints: const BoxConstraints(
+                        //   maxHeight: 40,
+                        // ),
+                        child: BalanceWidget(
+                          balance: balance,
+                          afterSign: afterSign,
+                          hasSign: hasSign,
+                          isEditingPage: true,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 const Divider(

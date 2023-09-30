@@ -26,7 +26,7 @@ class _SessionCreationPageState extends State<SessionCreationPage> {
   @override
   void initState() {
     double balance = context.read<SettingsCubit>().state.balance * context.read<SettingsCubit>().state.dollarRatio;
-    balanceController = TextEditingController(text: balance == 0 ? '': balance.toStringAsFixed(2));
+    balanceController = TextEditingController(text: balance == 0 ? '': balance.toStringAsFixed(2).replaceAll('.00', ''));
     super.initState();
   }
 
@@ -42,8 +42,6 @@ class _SessionCreationPageState extends State<SessionCreationPage> {
               'You can not create session with empty fields');
         } else {
           var balance = context.read<SettingsCubit>().state.priceToUsd(double.parse(balanceController.text));
-          print('balance');
-          print(balance);
           context.read<SessionCubit>().addSession(
                 dateController.text,
                 casinoController.text,

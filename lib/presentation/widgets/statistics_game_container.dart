@@ -91,7 +91,9 @@ class StatisticsGameContainer extends StatelessWidget {
               Text(
                 profit,
                 style: AppTextStyles.font16.copyWith(
-                  color: AppColors.dollarColor,
+                  color: profit.contains('-')
+                      ? AppColors.red
+                      : AppColors.dollarColor,
                   fontWeight: FontWeight.w500,
                 ),
               ),

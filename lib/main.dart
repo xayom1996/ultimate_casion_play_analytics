@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt.get<SessionCubit>()..initDb(),
         ),
         BlocProvider<SessionsCubit>(
-          create: (_) => getIt.get<SessionsCubit>()..createNewSessions(),
+          create: (_) => getIt.get<SessionsCubit>()..initDb(),
         ),
       ],
       child: MaterialApp(

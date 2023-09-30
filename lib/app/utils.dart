@@ -111,12 +111,12 @@ List statisticsGames(List<Session> sessions) {
 }
 
 bool hasPriceSign(double price) {
-  String value = max(0, price).toStringAsFixed(2);
+  String value = max(0, price).toStringAsFixed(2).replaceAll('.00', '');
   return (value.contains('.') && value != '0.00');
 }
 
 String afterPriceSign(double price) {
-  String value = max(0, price).toStringAsFixed(2);
+  String value = max(0, price).toStringAsFixed(2).replaceAll('.00', '');
   if (value.contains('.') && value != '0.00') {
     return value.split('.').last;
   } else {

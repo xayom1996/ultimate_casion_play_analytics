@@ -204,14 +204,16 @@ class _SessionAddGamePageState extends State<SessionAddGamePage> {
                                 padding: const EdgeInsets.all(16.0),
                                 child: Row(
                                   children: [
-                                    Text(
-                                      game.name,
-                                      style: AppTextStyles.font14.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.black,
+                                    Expanded(
+                                      child: Text(
+                                        game.name,
+                                        style: AppTextStyles.font14.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.black,
+                                        ),
                                       ),
                                     ),
-                                    const Spacer(),
+                                    // const Spacer(),
                                     if (setGame != null && setGame!.name == game.name)
                                       const Icon(
                                         Icons.check,
@@ -326,7 +328,7 @@ class _SessionAddGamePageState extends State<SessionAddGamePage> {
                       ),
                     ),
                     const Spacer(),
-                    if (imageName == null) ...[
+                    if (imageName == null || imageName!.isEmpty) ...[
                       InkWell(
                         onTap: openCameraBottomSheet,
                         child: Row(

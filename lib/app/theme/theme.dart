@@ -13,6 +13,7 @@ class AppColors {
   static const Color inActiveButtonColor = Color(0xffEEF0F3);
   static const Color backgroundPageColor = Color(0xffF0F2F8);
   static const Color dollarColor = Color(0xff49B790);
+  static const Color red = Color(0xffF57373);
 }
 
 

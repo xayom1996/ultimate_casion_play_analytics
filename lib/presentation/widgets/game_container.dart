@@ -109,7 +109,9 @@ class GameContainer extends StatelessWidget {
               Text(
                 context.read<SettingsCubit>().profitToString(profit),
                 style: AppTextStyles.font16.copyWith(
-                  color: AppColors.dollarColor,
+                  color: context.read<SettingsCubit>().profitToString(profit).contains('-')
+                      ? AppColors.red
+                      : AppColors.dollarColor,
                   fontWeight: FontWeight.w500,
                 ),
               ),
