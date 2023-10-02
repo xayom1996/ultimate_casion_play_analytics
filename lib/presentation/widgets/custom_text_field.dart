@@ -71,6 +71,7 @@ class CustomTextField extends StatelessWidget {
         }
       },
       readOnly: isDatePicker == true || onTap != null,
+      maxLength: 14,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(40),
@@ -85,6 +86,7 @@ class CustomTextField extends StatelessWidget {
           fontWeight: FontWeight.w500,
           color: AppColors.gray,
         ),
+        counterText: '',
         suffixIcon: suffixIcon,
       ),
     );

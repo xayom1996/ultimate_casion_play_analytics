@@ -103,7 +103,7 @@ class _BalanceEditingPageState extends State<BalanceEditingPage> {
                     controller: controller,
                     keyboardType: const TextInputType.numberWithOptions(
                         signed: true, decimal: true),
-                    maxLength: maxLength,
+                    maxLength: 14,
                     decoration: const InputDecoration(
                       counterText: '',
                     ),
